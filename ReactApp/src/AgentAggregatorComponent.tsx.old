@@ -1,0 +1,193 @@
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+interface AgentAggregatorComponentProps {
+    userInput: string;
+}
+
+const AgentAggregatorComponent: React.FC<AgentAggregatorComponentProps> = ({ userInput}) => 
+{
+        // companyInfo: {
+        //     companyname:"microsoft",
+        //     founded:"april 4, 1975-1975",
+        //     ticker:"msft",
+        //     marketcap:"$2.8 trillion-$2.2 trillion",
+        //     employees:"221,000-181,000",
+        //     businessareas:["cloud computing","software","hardware","operating systems","gaming","artificial intelligence","productivity software","enterprise services"],
+        //     competitors:["apple","google","amazon","oracle","ibm","salesforce","adobe","sony"]
+        // },
+        // "classification": "High"
+
+    const response = {
+        companyInfo: {
+            companyname : "",
+            founded : "",
+            ticker : "",
+            marketcap : "",
+            employees : "",
+            businessareas : [],
+            competitors : []
+        },
+        classification: ""
+    };
+
+    const [userPrompt, setValue] = React.useState("");
+
+    async function handleSubmit()  
+    {
+        const agentURL = "http://localhost:8181/agent/aggregator";
+
+        console.log("User Prompt: " + userPrompt);
+        const payload = {userInput : userPrompt};
+        console.log("Payload: " + payload);
+        console.log("Payload JSON Stringify: " + JSON.stringify(payload));
+
+        // Trigger the Agent Execution
+        const resp = await fetch(agentURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+        const agentResult = await resp.json();
+        console.log("Agent Result: " + JSON.stringify(agentResult));
+        
+        setValue(agentResult);
+    }
+
+    return (
+    <>
+        <Container className="bg-body-secondary">
+            <Row>
+                <Col className="col-12">
+                    <h2 className="text-center">Agent Aggregator Application</h2>
+                </Col>
+            </Row>
+            <Row style={{ height: "20px"}}></Row>
+            <Row className="bg-body-secondary">
+                <Col className="col-1"></Col>
+                <Col className="col-10 text-start">
+                    <label htmlFor="userInput">Enter the name of the company you would like to get financial information from?
+If you don’t know the name, provides us a fact about the company so, we can deduce it.</label>
+                </Col>
+                <Col className="col-1"></Col>
+            </Row>
+            <Row style={{ height: "20px"}}></Row>
+            <Row>
+                <Col className="col-1"></Col>
+                <Col className="col-9">
+                    <input
+                        type="text"
+                        id="userInput"
+                        name="userInput"
+                        placeholder={userInput}
+                        value={userPrompt}
+                        onChange={(e) => setValue(e.target.value)}
+                        style={{ width: '100%', padding: '8px', boxSizing: 'border-box', color: 'gray' }}
+                    />
+                </Col>
+                <Col className="col-1">
+                    <Button className="bg-secondary" onClick={handleSubmit}>Submit</Button>
+                </Col>
+            </Row>
+            <Row style={{ height: "60px"}}></Row>
+            <Row>
+                <Col className="col-1"></Col>
+                <Col className="col-10">
+                    <Container style={{ marginTop: "20px" }}>
+                        <Row className="gy-3 bg-secondary" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <h4 className="text-white text-start">Category</h4>
+                            </Col>
+                            <Col className="col-8">
+                                <h4 className="text-white text-start">Information</h4>
+                            </Col>
+                        </Row>
+                        <Row className="bg-dark-subtle gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3 text-">
+                                <div className="fw-bold text-start">Company Name</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">{response.companyInfo.companyname}</div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-light gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Founded</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">{response.companyInfo.founded}</div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-dark-subtle gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Stock Ticker</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">{response.companyInfo.ticker}</div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-light gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Market Cap</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">{response.companyInfo.marketcap}</div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-dark-subtle gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Employees</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">{response.companyInfo.employees}</div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-light gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Business Areas</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">
+                                    {response.companyInfo.businessareas.map((item, index) => (
+                                        <span key={index}>{item}, </span>
+                                    ))}
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row className="bg-dark-subtle gy-3" style={{ minHeight: "80px"}}>
+                            <Col className="col-1"></Col>
+                            <Col className="col-3">
+                                <div className="fw-bold text-start">Competitors</div>
+                            </Col>
+                            <Col className="col-8">
+                                <div className="text-muted text-start">
+                                    {response.companyInfo.competitors.map((item, index) => (
+                                        <span key={index}>{item}, </span>
+                                    ))}
+                                </div>
+                            </Col>
+                        </Row>
+                    </Container>
+                </Col>
+                <Col className="col-1"></Col>
+            </Row>
+            <Row style={{ height: "20px"}}></Row>
+        </Container>
+
+    </>
+    );
+};
+
+export default AgentAggregatorComponent;

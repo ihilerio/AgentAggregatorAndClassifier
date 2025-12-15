@@ -22,11 +22,20 @@ EXECUTION STEP
 4. Execute "npm run start" to execute the server
 5. Open the browser and navigate to "http://localhost:8181 to see the REACT Webapp associated with this sample. You can find the distribution code in the "/build" directory.
 
+REACT APPLICATION
+
+The source code for the REACT APP can be found under the "ReactApp/src" directory. To update it do the following:
+
+1. Go to that directory
+2. npm run build or react-scripts build
+3. Copy /build directory to the top level Agent directory under repo.
+
 TEST INPUTS
 
 You can use the following prompts to test the web app:
-* What is the company that Jeff Bezos founded?
-* What is the company that Bill Gates founded?
-* Amazon
-* MSFT
-* Microsoft
+
+- What is the company that Jeff Bezos founded?
+- What is the company that Bill Gates founded?
+- Amazon
+- MSFT
+- Microsoft

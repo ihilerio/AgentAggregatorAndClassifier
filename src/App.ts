@@ -1,13 +1,12 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import multer from 'multer';
-import FormData from 'form-data';
-import OpenAI from 'openai';
-import { CompanyInfoGraph, log } from '../dist/BusinessLookup.js';
+import express from "express";
+import bodyParser from "body-parser";
+import FormData from "form-data";
+import OpenAI from "openai";
+import { CompanyInfoGraph, log } from "../dist/agents/BusinessLookup.js";
+import { ICompanyInfoGraphState } from "../dist/interfaces/ICompanyInfoGraphState.js";
 
 // Creates and configures an ExpressJS web server.
 class App {
-
   // ref to Express instance
   public express: express.Application;
   public openai: any;
@@ -23,12 +22,14 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
-    this.upload = multer();
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
     this.express.use(async (req, res, next) => {
       res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept",
+      );
       next();
     });
   }
@@ -39,45 +40,25 @@ class App {
     });
   }
 
+  //If this was a production app, you would want to:
+  // 1. Add proper error handling and authentication
+  // 2. Validate and sanitize input data
+  // 3. Use HTTPS and other security best practices
+  // 4. Implement rate limiting and logging
+  // 5. Structure the project for scalability and maintainability by moving these routes into their own modules
+
   // Configure API endpoints.
   private routes(): void {
     let router = express.Router();
 
-    router.post("/api/transcribe", this.upload.single("file"), async (req, res) => {
+    // Defines a POST endpoint for the agent Business Lookup
+    router.post("/agent/aggregator", async (req, res, next) => {
       try {
-          if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-          }
-          const file:any = req.file;
-
-          // Create a File object from the buffer
-          const audioFile = new File(
-            [file.buffer], 
-            file.originalname || 'audio.webm',
-            { type: file.mimetype }
-          );
-
-          // Call OpenAI transcription API
-          const result = await this.openai.audio.transcriptions.create({
-            file: audioFile,
-            model: "whisper-1",
-          });
-
-          res.json(result);
-      } catch (err) {
-        console.error("Transcription error:", err);
-        res.status(500).json({ error: "Transcription failed", details: err.message });
-      }
-    });
-
-
-    router.post('/agent/aggregator', async (req, res, next) => {
-      try {
-        let payload:any = req.body;
+        let payload: { userInput: string } = req.body;
         let userInputPayload = payload.userInput;
-        log('REST API userInput Request: '+ userInputPayload);
-  
-        const result = await CompanyInfoGraph.invoke({
+        log("REST API userInput Request: " + userInputPayload);
+
+        const result: ICompanyInfoGraphState = await CompanyInfoGraph.invoke({
           userInput: userInputPayload,
         });
 
@@ -89,53 +70,50 @@ class App {
         log("mergedResult: " + JSON.stringify(result.mergedResult));
         log("classification: " + result.classification);
         log("=====END RESULTS========");
-        res.json({companyInfo: JSON.parse(result.mergedResult), classification: result.classification});
+        res.json({
+          companyInfo: result.mergedResult,
+          classification: result.classification,
+        });
       } catch (error) {
         log(error);
       }
     });
 
-    router.post('/company/classification', async (req, res, next) => {
+    // Defines a POST endpoint for the classification of the business based on market cap and employees
+    router.post("/company/classification", async (req, res, next) => {
       try {
-        let payload:any = req.body;
-        let marketcapValue = payload.marketcap;
+        let payload: { marketCap: string; employees: string } = req.body;
+        let marketcapValue = payload.marketCap;
         let employeesValue = payload.employees;
-        log('market cap value: ' + marketcapValue);
-        log('number of employees value: ' + employeesValue);
+        log("market cap value: " + marketcapValue);
+        log("number of employees value: " + employeesValue);
 
         if (marketcapValue == null || employeesValue == null) {
-          log('Market Cap or number of Employees value is null');
-          log('Returning classification as Unknown');
-          res.json({classification: "Unknown"});
+          log("Market Cap or number of Employees value is null");
+          log("Returning classification as Unknown");
+          res.json({ classification: "Unknown" });
           return;
+        } else if (marketcapValue.includes("trillion")) {
+          log("Returning classification as High");
+          res.json({ classification: "High" });
+        } else if (marketcapValue.includes("billion")) {
+          log("Returning classification as Medium");
+          res.json({ classification: "Medium" });
+        } else if (marketcapValue.includes("million")) {
+          log("Returning classification as Low");
+          res.json({ classification: "Low" });
+        } else {
+          log("Returning classification as Not Sure");
+          res.json({ classification: "Not Sure" });
         }
-        else if (marketcapValue.includes("trillion")) {
-          log('Returning classification as High');
-          res.json({classification: "High"});           
-        }
-        else if (marketcapValue.includes("billion")) {
-          log('Returning classification as Medium');
-          res.json({classification: "Medium"});
-        }
-        else if (marketcapValue.includes("million")) {
-          log('Returning classification as Low');
-          res.json({classification: "Low"});
-        }
-        else {
-          log('Returning classification as Not Sure');
-          res.json({classification: "Not Sure"}); 
-        }
-
       } catch (error) {
         log(error);
       }
     });
 
-
-    this.express.use('/', router);
-    this.express.use('/', express.static('./build'));
+    this.express.use("/", router);
+    this.express.use("/", express.static("./build"));
   }
-
 }
 
-export {App};
+export { App };

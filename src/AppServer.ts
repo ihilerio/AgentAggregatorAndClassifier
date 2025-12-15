@@ -1,6 +1,6 @@
-import * as dotenv from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
-import {App} from '../dist/App.js';
+import * as dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
+import { App } from "../dist/App.js";
 
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);

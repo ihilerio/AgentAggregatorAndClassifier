@@ -11,6 +11,11 @@
 
 .env.local
 
+#REACT App
+/REACT/build
+/REACT/node_modules
+/REACT/coverage
+
 # dependencies
 /node_modules
 
