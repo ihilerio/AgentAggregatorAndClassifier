@@ -1,4 +1,5 @@
 PROJECT DESCRIPTION
+
 This project provides a sample code for an Agentic Flow written in LangChain/LangGraph that aggregates financial information about a specific company and classifies the stability of a company. The goal is to show how agents can assist humans in their daily tasks.
 
 TECHNOLOGIES USED
