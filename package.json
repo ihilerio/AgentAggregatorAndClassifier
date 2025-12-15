@@ -1,0 +1,40 @@
+{
+  "name": "Aggregation Agent Service",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "This directory contains one express servers: * AppServer.ts - express web server with parameter support * App.ts - express server class that is constructed via AppServer.ts",
+  "main": "AppServer.js",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.67.0",
+    "@langchain/anthropic": "^1.2.0",
+    "@langchain/core": "^1.0.1",
+    "@langchain/langgraph": "^1.0.0",
+    "@langchain/langgraph-checkpoint": "^1.0.0",
+    "@langchain/ollama": "^1.0.1",
+    "@langchain/openai": "^1.1.2",
+    "@langchain/weaviate": "^1.0.0",
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.11.1",
+    "@types/node": "^20.11.5",
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.3.1",
+    "dotenv-expand": "^12.0.3",
+    "express": "^4.18.2",
+    "form-data": "^4.0.5",
+    "multer": "^2.0.2",
+    "ollama": "^0.6.3",
+    "openai": "^4.104.0",
+    "protobufjs": "^7.5.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/AppServer.js"
+  },
+  "devDependencies": {
+    "@types/multer": "^2.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "author": "Israel Hilerio",
+  "license": "ISC"
+}
