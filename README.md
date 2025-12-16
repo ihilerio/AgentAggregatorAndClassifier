@@ -18,9 +18,10 @@ EXECUTION STEP
 
 1. Run the ollama server on the same machine you are going to be executing the NodeJS/Express server
 2. Execute "npm run build" to compile the Typescript files and generate a distribution "/dist" folder
-3. Configure your OpenAI and Anthropic keys in the .env file
-4. Execute "npm run start" to execute the server
-5. Open the browser and navigate to "http://localhost:8181 to see the REACT Webapp associated with this sample. You can find the distribution code in the "/build" directory.
+3. Rename .env.git to .env
+4. Configure your OpenAI and Anthropic keys in the .env file
+5. Execute "npm run start" to execute the server
+6. Open the browser and navigate to "http://localhost:8181 to see the REACT Webapp associated with this sample. You can find the distribution code in the "/build" directory.
 
 REACT APPLICATION
 
