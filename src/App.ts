@@ -73,6 +73,8 @@ class App {
         res.json({
           companyInfo: result.mergedResult,
           classification: result.classification,
+          openAIInfo: result.companyInfoOpenAI,
+          anthropicInfo: result.companyInfoClaude,
         });
       } catch (error) {
         log(error);
@@ -88,6 +90,8 @@ class App {
         log("market cap value: " + marketcapValue);
         log("number of employees value: " + employeesValue);
 
+        //While employees is not used to determine classification in this example,
+        //it is implicitely used as a validator since without employees the company wouldn't a classifiable company 
         if (marketcapValue == null || employeesValue == null) {
           log("Market Cap or number of Employees value is null");
           log("Returning classification as Unknown");

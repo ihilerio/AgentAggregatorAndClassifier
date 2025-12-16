@@ -170,7 +170,7 @@ async function getCompanyName(state: ICompanyInfoGraphState) {
       userInput: userInputPrompt,
     });
 
-    log("Responce for Ollama Company Name:" + response.company_name);
+    log("Response for Ollama Company Name:" + response.company_name);
 
     //set state in graph
     return {
