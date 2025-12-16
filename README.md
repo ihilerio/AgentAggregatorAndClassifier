@@ -27,7 +27,7 @@ REACT APPLICATION
 The source code for the REACT APP can be found under the "ReactApp/src" directory. To update it do the following:
 
 1. Go to that directory
-2. npm run build or react-scripts build
+2. npm run build
 3. Copy /build directory to the top level Agent directory under repo.
 
 TEST INPUTS
