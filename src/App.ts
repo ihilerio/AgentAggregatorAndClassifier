@@ -91,7 +91,8 @@ class App {
         log("number of employees value: " + employeesValue);
 
         //While employees is not used to determine classification in this example,
-        //it is implicitely used as a validator since without employees the company wouldn't a classifiable company 
+        //it is implicitely used as a validator since without employees the company wouldn't a classifiable company
+        //In the future, employees can also be used in the future to expand the classification logic
         if (marketcapValue == null || employeesValue == null) {
           log("Market Cap or number of Employees value is null");
           log("Returning classification as Unknown");
