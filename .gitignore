@@ -10,6 +10,7 @@
 /false
 
 .env.local
+.env.git
 
 #REACT App
 /REACT/build
